@@ -40,6 +40,35 @@ class ASpaceToJumpCharacter : public ACharacter
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 	UAnimMontage* FireAnimation;
 
+	virtual void Tick(float DeltaTime) OVERRIDE;
+	// GRAVITY STUFF!
+
+	bool magentModeOn;
+	AActor* gravitySource;
+	float gravityPower;
+	float magneticFieldSize;
+	float magnetCurDistanceToSurface;
+	float magnetCloseEnoughRange;
+
+	FVector magnetSurfaceNormal;
+
+	float deltaTimePhyiscsBoostMultiplier;
+
+	void applyMagnetModeGravity();
+
+//	void clearTimers();
+//	void magnetAquireTimer();
+
+	virtual void ASpaceToJumpCharacter::ReceiveHit(
+		class UPrimitiveComponent * MyComp,
+		class AActor * Other,
+		class UPrimitiveComponent * OtherComp,
+		bool bSelfMoved,
+		FVector HitLocation,
+		FVector HitNormal,
+		FVector NormalImpulse,
+		const FHitResult & Hit) OVERRIDE;
+
 protected:
 
 	/** Handler for a touch input beginning. */
@@ -73,5 +102,5 @@ protected:
 	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) OVERRIDE;
 	// End of APawn interface
-};
 
+};

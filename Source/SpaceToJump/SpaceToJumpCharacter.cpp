@@ -8,7 +8,7 @@
 // ASpaceToJumpCharacter
 
 ASpaceToJumpCharacter::ASpaceToJumpCharacter(const class FPostConstructInitializeProperties& PCIP)
-	: Super(PCIP)
+: Super(PCIP)
 {
 	// Set size for collision capsule
 	CapsuleComponent->InitCapsuleSize(42.f, 96.0f);
@@ -35,7 +35,41 @@ ASpaceToJumpCharacter::ASpaceToJumpCharacter(const class FPostConstructInitializ
 
 	// Note: The ProjectileClass and the skeletal mesh/anim blueprints for Mesh1P are set in the
 	// derived blueprint asset named MyCharacter (to avoid direct content references in C++)
+
+	//Gravity stuff
+
+	deltaTimePhyiscsBoostMultiplier = 2.f;
+
+	gravityPower = 570.f;
+	magneticFieldSize = 700.f;
+	magnetCloseEnoughRange = 160.f;
+
 }
+
+void ASpaceToJumpCharacter::ReceiveHit(
+	class UPrimitiveComponent * MyComp,
+	class AActor * Other,
+	class UPrimitiveComponent * OtherComp,
+	bool bSelfMoved,
+	FVector HitLocation,
+	FVector HitNormal,
+	FVector NormalImpulse,
+	const FHitResult & Hit) 
+{
+	Super::ReceiveHit(MyComp, Other, OtherComp, bSelfMoved, HitLocation, HitNormal, NormalImpulse, Hit);
+	UE_LOG(LogTemp, Warning, TEXT("Collided!"));
+	gravitySource = Other;
+}
+
+void ASpaceToJumpCharacter::Tick(float DeltaTime) {
+	Super::Tick(DeltaTime);
+
+	applyMagnetModeGravity();
+
+	deltaTimePhyiscsBoostMultiplier = DeltaTime * 40;
+
+}
+
 
 //////////////////////////////////////////////////////////////////////////
 // Input
@@ -163,4 +197,11 @@ void ASpaceToJumpCharacter::LookUpAtRate(float Rate)
 {
 	// calculate delta for this frame from the rate information
 	AddControllerPitchInput(Rate * BaseLookUpRate * GetWorld()->GetDeltaSeconds());
+}
+
+
+////// GRAVITY!
+
+void ASpaceToJumpCharacter::applyMagnetModeGravity() {
+
 }
